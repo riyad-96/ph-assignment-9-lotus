@@ -40,10 +40,10 @@ function HomeSlider({ gamesArray }) {
         return (
           <SwiperSlide key={i}>
             <div className="pb-8">
-              <div className="relative rounded-lg p-2.5 pointer-fine:hover:bg-zinc-200">
+              <div className="relative rounded-md p-2.5 pointer-fine:hover:bg-zinc-200">
                 <Link to={`/details/${id}`} className="absolute inset-0 z-4" />
 
-                <div className="relative rounded-xl bg-black text-white">
+                <div className="relative rounded-lg bg-black text-white">
                   <div className="home-slider-mask-image aspect-video overflow-hidden">
                     <img className="size-full object-cover" src={coverPhoto} alt={title} />
                   </div>
@@ -51,20 +51,20 @@ function HomeSlider({ gamesArray }) {
                   <div className="absolute inset-0 flex items-end">
                     <div className="flex flex-1 items-center gap-3 p-3 md:p-5">
                       <div>
-                        <div className="size-10 overflow-hidden rounded-lg md:size-15">
+                        <div className="size-8 overflow-hidden rounded-lg md:size-15">
                           <img className="size-full object-cover" src={icon.lowRes} alt="" />
                         </div>
                       </div>
 
                       <div className="max-md:leading-5">
-                        <h3 className="line-clamp-1 font-medium tracking-wide md:text-xl md:font-semibold">
+                        <h3 className="line-clamp-1 font-medium tracking-wide max-sm:text-sm md:text-xl md:font-semibold">
                           {title}
                         </h3>
-                        <span className="line-clamp-1 flex items-center gap-2 max-md:text-sm">
+                        <span className="line-clamp-1 flex items-center gap-2 max-md:text-xs">
                           <span>{developer}</span>
                           <span className="text-xl leading-0">•</span>
                           <span className="grid">
-                            <Swords size="16" />
+                            <Swords className="size-3 md:size-4" />
                           </span>
                         </span>
                       </div>

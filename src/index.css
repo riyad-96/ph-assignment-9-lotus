@@ -15,6 +15,7 @@
 /* Resets */
 html {
   color-scheme: light;
+  scroll-behavior: smooth;
 }
 
 @media (pointer: fine) {
@@ -46,4 +47,8 @@ html {
     hsl(0, 0%, 100%, 0.1),
     hsl(0, 0%, 100%, 0)
   );
+}
+
+.header.scroll-trigger {
+  box-shadow: 0 2px 5px -3px hsl(0, 0%, 0%, 0.2);
 }
