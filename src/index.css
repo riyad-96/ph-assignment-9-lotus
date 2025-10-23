@@ -1,3 +1,49 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
 @import 'tailwindcss';
 @plugin 'daisyui';
+
+:root {
+  --main-bg: hsl(0, 0%, 96%);
+  --text-clr: hsl(0, 0%, 100%);
+  --pale-dark-blue: hsl(231, 5%, 29%);
+}
+
+* {
+  scrollbar-width: thin;
+}
+
+/* Resets */
+html {
+  color-scheme: light;
+}
+
+@media (pointer: fine) {
+  button {
+    cursor: pointer;
+  }
+}
+
+/* Utils */
+.min-height-dvh {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.home-slider-mask-image {
+  -webkit-mask-image: linear-gradient(
+    hsl(0, 0%, 100%, 0),
+    hsl(0, 0%, 100%, 0.5),
+    hsl(0, 0%, 100%),
+    hsl(0, 0%, 100%),
+    hsl(0, 0%, 100%, 0.1),
+    hsl(0, 0%, 100%, 0)
+  );
+  mask-image: linear-gradient(
+    hsl(0, 0%, 100%, 0),
+    hsl(0, 0%, 100%, 0.5),
+    hsl(0, 0%, 100%),
+    hsl(0, 0%, 100%),
+    hsl(0, 0%, 100%, 0.1),
+    hsl(0, 0%, 100%, 0)
+  );
+}
