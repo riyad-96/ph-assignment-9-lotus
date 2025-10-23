@@ -51,4 +51,5 @@ html {
 
 .header.scroll-trigger {
   box-shadow: 0 2px 5px -3px hsl(0, 0%, 0%, 0.2);
+  background-color: hsl(0, 0%, 100%, 0.8);
 }

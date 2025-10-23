@@ -16,7 +16,9 @@ function HomeIndex() {
     })();
 
     function scrollObserver() {
-      document.querySelector('.header').classList.toggle('scroll-trigger', window.scrollY > 10);
+      requestAnimationFrame(() => {
+        document.querySelector('.header').classList.toggle('scroll-trigger', window.scrollY > 10);
+      });
     }
 
     window.addEventListener('scroll', scrollObserver);
