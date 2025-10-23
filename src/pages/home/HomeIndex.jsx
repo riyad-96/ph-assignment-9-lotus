@@ -16,9 +16,18 @@ function HomeIndex() {
 
   return (
     <div className="">
-      <div className="py-16">
+      <title>Home • Lotus Play</title>
+      <section className="py-8">
+        <h2 className="mb-2 pl-4 text-lg font-medium md:text-xl">Trending Games</h2>
         {games.length > 0 && <HomeSlider gamesArray={games} />}
-      </div>
+      </section>
+
+      <section>
+        <h2 className="mb-2 pl-4 text-lg font-medium md:text-xl">Popular Games</h2>
+        <div >
+          
+        </div>
+      </section>
     </div>
   );
 }

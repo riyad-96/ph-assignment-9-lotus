@@ -36,19 +36,7 @@ function HomeSlider({ gamesArray }) {
       className="mySwiper w-[clamp(17.125rem,-1.625rem+100vw,46.375rem)] [--swiper-pagination-color:#00bc7d] md:w-[clamp(16.75rem,-1.5493rem+97.5962vw,67.5rem)]"
     >
       {recommendedGames.map((g, i) => {
-        const {
-          id,
-          title,
-          description,
-          icon,
-          coverPhoto,
-          morePhotos,
-          ratings,
-          downloadLink,
-          developer,
-          category,
-        } = g;
-        console.log(g);
+        const { id, title, icon, coverPhoto, developer } = g;
         return (
           <SwiperSlide key={i}>
             <div className="pb-8">
