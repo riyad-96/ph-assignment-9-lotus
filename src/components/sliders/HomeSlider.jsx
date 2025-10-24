@@ -33,7 +33,7 @@ function HomeSlider({ gamesArray }) {
       }}
       speed={600}
       loop
-      className="mySwiper w-[clamp(17.125rem,-1.625rem+100vw,46.375rem)] [--swiper-pagination-color:#00bc7d] md:w-[clamp(16.75rem,-1.5493rem+97.5962vw,67.5rem)]"
+      className="w-[clamp(17.125rem,-1.625rem+100vw,46.375rem)] [--swiper-pagination-color:#00bc7d] md:w-[clamp(16.75rem,-1.5493rem+97.5962vw,67.5rem)]"
     >
       {recommendedGames.map((g, i) => {
         const { id, title, icon, coverPhoto, developer } = g;
@@ -52,7 +52,12 @@ function HomeSlider({ gamesArray }) {
                     <div className="flex flex-1 items-center gap-3 p-3 md:p-5">
                       <div>
                         <div className="size-8 overflow-hidden rounded-lg md:size-15">
-                          <img className="size-full object-cover" src={icon.lowRes} alt="" />
+                          <img
+                            className="size-full object-cover"
+                            src={icon.lowRes}
+                            alt={title}
+                            loading="lazy"
+                          />
                         </div>
                       </div>
 
