@@ -1,8 +1,6 @@
-import React from 'react';
-
 function Footer() {
   return (
-    <footer className="px-2 py-8 md:px-4">
+    <footer className="px-2 pb-8 md:px-4">
       <div className="mx-auto max-w-[1100px]">
         <div className="py-5">
           <span className="block h-px bg-zinc-200"></span>
@@ -41,7 +39,7 @@ function Footer() {
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-x-8 gap-y-4 pt-8 text-xs max-sm:justify-center font-light">
+          <div className="flex flex-wrap gap-x-8 gap-y-4 pt-8 text-xs font-light max-sm:justify-center">
             <a href="#" className="hover:text-emerald-700">
               Terms of Service
             </a>

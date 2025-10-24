@@ -101,7 +101,7 @@ function AllGamesSection({ games, categories }) {
           {['All', ...categories].map((c) => (
             <button
               key={c}
-              className={`rounded-full bg-white px-4 py-1 text-sm font-light text-nowrap shadow-xs ${currentCategory.toLowerCase() === c.toLowerCase() ? 'outline-2 outline-emerald-500/40' : 'outline-black/0'}`}
+              className={`rounded-full bg-white px-4 py-1 text-sm font-light text-nowrap shadow-xs ${currentCategory.toLowerCase() === c.toLowerCase() ? 'outline-2 outline-(--accent)' : 'outline-black/0'}`}
               onClick={() => setCurrentCategory(c)}
             >
               {c}

@@ -1,6 +1,15 @@
-import { useEffect, useState } from 'react';
-import { GoogleIcon } from '../Svgs';
+import { useEffect, useRef, useState } from 'react';
+import { EyeOff, EyeOpened, GoogleIcon } from '../Svgs';
 import { Link } from 'react-router-dom';
+import { toast } from 'kitzo/react';
+import {
+  createUserWithEmailAndPassword,
+  reload,
+  signInWithPopup,
+  updateProfile,
+} from 'firebase/auth';
+import { auth, GoogleProvider } from '../../configs/firebase';
+import { AnimatePresence, motion } from 'motion/react';
 
 function Register() {
   useEffect(() => {
@@ -16,6 +25,10 @@ function Register() {
   const [photoURLErr, setPhotoURLErr] = useState(null);
   const [emailErr, setEmailErr] = useState(null);
   const [passErr, setPassErr] = useState(null);
+
+  const [passShowing, setPassShowing] = useState(false);
+  const [registering, setRegistering] = useState(false);
+  const passInput = useRef();
 
   function isAbleToRegister() {
     let ableToLogin = true;
@@ -77,8 +90,44 @@ function Register() {
   }
 
   async function sendRegisterRequest() {
-    const ableToLogin = isAbleToRegister();
-    if (!ableToLogin) return;
+    const ableToRegister = isAbleToRegister();
+    if (!ableToRegister) return;
+
+    setRegistering(true);
+    toast.promise(
+      createUserWithEmailAndPassword(auth, email, password).then((res) => ({
+        user: res.user,
+        update: () => updateProfile(res.user, { displayName: name, photoURL }),
+      })),
+      {
+        loading: 'Creating account...',
+        success: async ({ user, update }) => {
+          await update();
+          await reload(user);
+          setRegistering(false);
+          return 'Registration successful.';
+        },
+        error: (err) => {
+          setRegistering(false);
+
+          if (err.code === 'auth/network-request-failed') return 'Network error';
+          if (err.code === 'auth/email-already-in-use') return 'Email already exists';
+          return 'Registration failed';
+        },
+      },
+      {
+        duration: 3000,
+      },
+    );
+  }
+
+  async function signupWithGoogle() {
+    try {
+      const res = await signInWithPopup(auth, GoogleProvider);
+      console.log(res);
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   return (
@@ -156,18 +205,57 @@ function Register() {
           <label className="w-fit pb-2 pl-1 leading-4" htmlFor="password">
             Password
           </label>
-          <input
-            onChange={(e) => {
-              setPassErr(null);
-              setPassword(e.target.value);
-            }}
-            value={password}
-            className="w-full min-w-0 rounded-full border border-zinc-200 bg-white px-4 py-2 tracking-wide outline-none placeholder:text-zinc-400 focus:border-zinc-400"
-            id="password"
-            type="password"
-            placeholder="Enter your password"
-            required
-          />
+          <div className="relative">
+            <AnimatePresence>
+              {password && (
+                <motion.button
+                  initial={{
+                    opacity: 0,
+                  }}
+                  animate={{
+                    opacity: 1,
+                  }}
+                  exit={{
+                    opacity: 0,
+                  }}
+                  onClick={() => {
+                    setPassShowing((prev) => !prev);
+                    passInput.current.focus();
+                  }}
+                  whileTap={{
+                    scale: 0.9,
+                  }}
+                  transition={{
+                    opacity: {
+                      duration: 0.1,
+                    },
+                    scale: {
+                      duration: 0.2,
+                      type: 'spring',
+                      stiffness: 900,
+                      damping: 25,
+                    },
+                  }}
+                  className="absolute top-1/2 right-2 z-2 grid size-10 -translate-y-1/2 place-items-center rounded-full text-zinc-600"
+                >
+                  {passShowing ? <EyeOff size="20" /> : <EyeOpened size="20" />}
+                </motion.button>
+              )}
+            </AnimatePresence>
+            <input
+              ref={passInput}
+              onChange={(e) => {
+                setPassErr(null);
+                setPassword(e.target.value);
+              }}
+              value={password}
+              className="w-full min-w-0 rounded-full border border-zinc-200 bg-white px-4 py-2 tracking-wide outline-none placeholder:text-zinc-400 focus:border-zinc-400"
+              id="password"
+              type={passShowing ? 'text' : 'password'}
+              placeholder="Enter your password"
+              required
+            />
+          </div>
           <span
             className={`overflow-hidden pl-1 text-sm text-red-500 transition-[height] duration-150 ${passErr ? 'h-5' : 'h-0'}`}
           >
@@ -177,16 +265,28 @@ function Register() {
 
         <div>
           <button
-            onClick={sendRegisterRequest}
-            className="block h-[45px] w-full rounded-full bg-zinc-800 tracking-wide text-white"
+            onClick={() => {
+              if (registering) return;
+              sendRegisterRequest();
+            }}
+            className="grid h-[45px] w-full place-items-center rounded-full bg-zinc-800 tracking-wide text-white"
           >
-            Register
+            {registering ? (
+              <span className="loading loading-spinner loading-sm"></span>
+            ) : (
+              <span>Register</span>
+            )}
           </button>
         </div>
       </div>
 
-      <div className="mt-4">
-        <button className="flex h-[45px] w-full items-center justify-center gap-2 rounded-full bg-zinc-800 tracking-wide text-white">
+      <div className="mt-2 text-center text-sm">or</div>
+
+      <div className="mt-2">
+        <button
+          onClick={() => signupWithGoogle()}
+          className="flex h-[45px] w-full items-center justify-center gap-2 rounded-full bg-zinc-800 tracking-wide text-white"
+        >
           <span>
             <GoogleIcon size="20" />
           </span>
@@ -197,7 +297,7 @@ function Register() {
       <div className="mt-4 flex justify-center text-sm">
         <span className="flex items-center gap-2">
           <span>Already have an account?</span>
-          <Link className="text-(--accent) underline" to="/auth/log-in" children="Login" />
+          <Link className="text-(--accent) underline" to="/auth/log-in" children="Login" replace />
         </span>
       </div>
     </div>

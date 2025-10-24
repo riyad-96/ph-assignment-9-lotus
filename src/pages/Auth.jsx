@@ -5,9 +5,9 @@ function Auth() {
   const navigate = useNavigate();
 
   return (
-    <div className="flex h-screen items-center p-4">
-      <div className="mx-auto max-w-[350px] flex-1 py-8">
-        <div className="mx-auto w-fit">
+    <div className="grid h-screen items-center overflow-y-auto p-4">
+      <div className="mx-auto w-full max-w-[350px] pb-8">
+        <div className="mx-auto w-fit fixed top-3 left-3">
           <LotusLogo onClick={() => navigate('/')} />
         </div>
         <Outlet />

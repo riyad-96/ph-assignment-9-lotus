@@ -10,6 +10,12 @@ import HomeIndex from './pages/home/HomeIndex.jsx';
 import GameDetails from './pages/home/GameDetails.jsx';
 import Login from './components/auth/Login.jsx';
 import Register from './components/auth/Register.jsx';
+import AuthProtected from './routes/AuthProtected.jsx';
+import AppLoadingProtected from './routes/AppLoadingProtected.jsx';
+import GameDetailsProtected from './routes/GameDetailsProtected.jsx';
+import NotFound from './pages/NotFound.jsx';
+import Profile from './pages/Profile.jsx';
+import ProfileProtected from './routes/ProfileProtected.jsx';
 
 // Routes
 const router = createBrowserRouter([
@@ -17,9 +23,12 @@ const router = createBrowserRouter([
     path: '/',
     element: (
       <ContextProvider>
-        <App />
+        <AppLoadingProtected>
+          <App />
+        </AppLoadingProtected>
       </ContextProvider>
     ),
+    errorElement: <NotFound />,
     children: [
       {
         path: '',
@@ -31,13 +40,29 @@ const router = createBrowserRouter([
           },
           {
             path: 'details/:id',
-            element: <GameDetails />,
+            element: (
+              <GameDetailsProtected>
+                <GameDetails />
+              </GameDetailsProtected>
+            ),
+          },
+          {
+            path: 'profile',
+            element: (
+              <ProfileProtected>
+                <Profile />
+              </ProfileProtected>
+            ),
           },
         ],
       },
       {
         path: 'auth',
-        element: <Auth />,
+        element: (
+          <AuthProtected>
+            <Auth />
+          </AuthProtected>
+        ),
         children: [
           {
             path: 'log-in',

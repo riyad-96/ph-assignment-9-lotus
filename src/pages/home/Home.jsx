@@ -19,7 +19,7 @@ function Home() {
     <div className="min-height-dvh grid grid-rows-[1fr_auto]">
       <Header />
 
-      <div className="min-h-dvh pt-10 md:pt-15">
+      <div className="min-h-dvh pt-[50px] md:pt-15">
         <div className="h-full">
           <Outlet />
         </div>

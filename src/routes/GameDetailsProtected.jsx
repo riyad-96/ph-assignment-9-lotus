@@ -1,9 +1,14 @@
-import React from 'react'
+import { useGlobalContext } from '../contexts/GlobalContext';
+import { Navigate, useLocation } from 'react-router-dom';
 
-function GameDetailsProtected() {
-  return (
-    <div>GameDetailsProtected</div>
-  )
+function GameDetailsProtected({ children }) {
+  const location = useLocation();
+
+  const { user } = useGlobalContext();
+  if (!user) {
+    return <Navigate to="/auth/log-in" state={location.pathname} />;
+  }
+  return children;
 }
 
-export default GameDetailsProtected
+export default GameDetailsProtected;

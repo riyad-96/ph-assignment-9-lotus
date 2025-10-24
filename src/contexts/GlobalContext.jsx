@@ -1,8 +1,12 @@
+import { onAuthStateChanged } from 'firebase/auth';
 import { createContext, useContext, useEffect, useState } from 'react';
+import { auth } from '../configs/firebase';
 
 const globalContext = createContext();
 
 function GlobalContext({ children }) {
+  const [user, setUser] = useState(null);
+
   const [appLoading, setAppLoading] = useState(true);
   const [dataLoading, setDataLoading] = useState(true);
 
@@ -11,6 +15,7 @@ function GlobalContext({ children }) {
   const [top9Games, setTop9Games] = useState([]);
 
   useEffect(() => {
+    if (appLoading) return;
     (async () => {
       try {
         const gamesApiRes = await fetch('https://kitzo-apis.onrender.com/games');
@@ -32,11 +37,22 @@ function GlobalContext({ children }) {
         setDataLoading(false);
       }
     })();
+  }, [appLoading]);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+      setAppLoading(false);
+    });
+
+    return unsubscribe;
   }, []);
 
   return (
     <globalContext.Provider
       value={{
+        user,
+        setUser,
         appLoading,
         setAppLoading,
         dataLoading,

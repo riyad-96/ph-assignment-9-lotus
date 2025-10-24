@@ -1,6 +1,12 @@
-import { useEffect, useState } from 'react';
-import { GoogleIcon } from '../Svgs';
-import { Link } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { EyeOff, EyeOpened, GoogleIcon } from '../Svgs';
+import { Link, useLocation } from 'react-router-dom';
+import { toast } from 'kitzo/react';
+
+import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { auth, GoogleProvider } from '../../configs/firebase';
+
+import { motion, AnimatePresence } from 'motion/react';
 
 function Login() {
   useEffect(() => {
@@ -12,6 +18,10 @@ function Login() {
 
   const [emailErr, setEmailErr] = useState(null);
   const [passErr, setPassErr] = useState(null);
+
+  const [passShowing, setPassShowing] = useState(false);
+  const [loggingIn, setLogginIn] = useState(false);
+  const passInput = useRef();
 
   function isAbleToLogin() {
     let ableToLogin = true;
@@ -63,6 +73,34 @@ function Login() {
   async function sendLoginRequest() {
     const ableToLogin = isAbleToLogin();
     if (!ableToLogin) return;
+
+    setLogginIn(true);
+    toast.promise(
+      signInWithEmailAndPassword(auth, email, password),
+      {
+        loading: 'Logging in...',
+        success: () => {
+          setLogginIn(false);
+          return 'Welcome back';
+        },
+        error: (err) => {
+          setLogginIn(false);
+          if (err.code === 'auth/network-request-failed') return 'Network error';
+          if (err.code === 'auth/invalid-credential') return 'Invalid credential';
+          return 'Login failed';
+        },
+      },
+      { duration: 3500 },
+    );
+  }
+
+  async function loginWithGoogle() {
+    try {
+      const res = await signInWithPopup(auth, GoogleProvider);
+      console.log(res);
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   return (
@@ -96,18 +134,57 @@ function Login() {
           <label className="w-fit pb-2 pl-1 leading-4" htmlFor="password">
             Password
           </label>
-          <input
-            onChange={(e) => {
-              setPassErr(null);
-              setPassword(e.target.value);
-            }}
-            value={password}
-            className="w-full min-w-0 rounded-full border border-zinc-200 bg-white px-4 py-2 tracking-wide outline-none placeholder:text-zinc-400 focus:border-zinc-400"
-            id="password"
-            type="password"
-            placeholder="Enter your password"
-            required
-          />
+          <div className="relative">
+            <AnimatePresence>
+              {password && (
+                <motion.button
+                  initial={{
+                    opacity: 0,
+                  }}
+                  animate={{
+                    opacity: 1,
+                  }}
+                  exit={{
+                    opacity: 0,
+                  }}
+                  onClick={() => {
+                    setPassShowing((prev) => !prev);
+                    passInput.current.focus();
+                  }}
+                  whileTap={{
+                    scale: 0.9,
+                  }}
+                  transition={{
+                    opacity: {
+                      duration: 0.1,
+                    },
+                    scale: {
+                      duration: 0.2,
+                      type: 'spring',
+                      stiffness: 900,
+                      damping: 25,
+                    },
+                  }}
+                  className="absolute top-1/2 right-2 z-2 grid size-10 -translate-y-1/2 place-items-center rounded-full text-zinc-600"
+                >
+                  {passShowing ? <EyeOff size="20" /> : <EyeOpened size="20" />}
+                </motion.button>
+              )}
+            </AnimatePresence>
+            <input
+              ref={passInput}
+              onChange={(e) => {
+                setPassErr(null);
+                setPassword(e.target.value);
+              }}
+              value={password}
+              className="w-full min-w-0 rounded-full border border-zinc-200 bg-white px-4 py-2 tracking-wide outline-none placeholder:text-zinc-400 focus:border-zinc-400"
+              id="password"
+              type={passShowing ? 'text' : 'password'}
+              placeholder="Enter your password"
+              required
+            />
+          </div>
           <span
             className={`overflow-hidden pl-1 text-sm text-red-500 transition-[height] duration-150 ${passErr ? 'h-5' : 'h-0'}`}
           >
@@ -117,10 +194,17 @@ function Login() {
 
         <div>
           <button
-            onClick={sendLoginRequest}
-            className="block h-[45px] w-full rounded-full bg-zinc-800 tracking-wide text-white"
+            onClick={() => {
+              if (loggingIn) return;
+              sendLoginRequest();
+            }}
+            className="grid h-[45px] w-full place-items-center rounded-full bg-zinc-800 tracking-wide text-white"
           >
-            Login
+            {loggingIn ? (
+              <span className="loading loading-spinner loading-sm"></span>
+            ) : (
+              <span>Login</span>
+            )}
           </button>
         </div>
       </div>
@@ -132,7 +216,7 @@ function Login() {
       </div>
 
       <div className="mt-4">
-        <button className="flex h-[45px] w-full items-center justify-center gap-2 rounded-full bg-zinc-800 tracking-wide text-white">
+        <button onClick={loginWithGoogle} className="flex h-[45px] w-full items-center justify-center gap-2 rounded-full bg-zinc-800 tracking-wide text-white">
           <span>
             <GoogleIcon size="20" />
           </span>
@@ -143,7 +227,12 @@ function Login() {
       <div className="mt-4 flex justify-center text-sm">
         <span className="flex items-center gap-2">
           <span>Don't have an account?</span>
-          <Link className="text-(--accent) underline" to="/auth/register" children="Register" />
+          <Link
+            className="text-(--accent) underline"
+            to="/auth/register"
+            children="Register"
+            replace
+          />
         </span>
       </div>
     </div>

@@ -15,7 +15,6 @@ function GameDetails() {
         const apiRes = await fetch(`https://kitzo-apis.onrender.com/games/${id}`);
         const gameData = await apiRes.json();
         setGame(gameData.data);
-        console.log(gameData.data);
         document.querySelector('title').textContent = `${gameData.data.title} • Lotus Play`;
       } catch (err) {
         document.querySelector('title').textContent = 'Loading error • Lotus Play';
@@ -135,7 +134,7 @@ function GameDetails() {
                     <Download size="16" />
                   </span>
                 </button>
-                <span className="font-light tracking-wide">
+                <span className="text-sm font-light tracking-wide">
                   <span>Download size: </span>
                   <span className="font-normal">
                     {(() => {
