@@ -1,11 +1,14 @@
 import { confirmPasswordReset } from 'firebase/auth';
 import { toast } from 'kitzo/react';
 import { CheckCheck } from 'lucide-react';
-import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { auth } from '../../configs/firebase';
 
 function ResetPassword() {
+  useEffect(() => {
+    document.querySelector('title').textContent = 'Reset password • Lotus Play';
+  }, []);
+
   const params = new URLSearchParams(window.location.search);
   const oobCode = params.get('oobCode');
 

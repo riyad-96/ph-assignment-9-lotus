@@ -1,5 +1,6 @@
 import { format } from 'date-fns';
-import { Download, Star } from 'lucide-react';
+import { toast } from 'kitzo/react';
+import { Download, Star, Trash } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 
@@ -9,12 +10,19 @@ function GameDetails() {
   const [game, setGame] = useState({});
   const [gameLoading, setGameLoading] = useState(true);
 
+  const [installed, setInstalled] = useState(null);
+  const [installing, setInstalling] = useState(false);
+
   useEffect(() => {
     (async () => {
       try {
         const apiRes = await fetch(`https://kitzo-apis.onrender.com/games/${id}`);
         const gameData = await apiRes.json();
         setGame(gameData.data);
+
+        const installedGames = JSON.parse(localStorage.getItem('installed-games')) || [];
+        setInstalled(installedGames.find((g) => g.id == gameData.data.id) || null);
+
         document.querySelector('title').textContent = `${gameData.data.title} • Lotus Play`;
       } catch (err) {
         document.querySelector('title').textContent = 'Loading error • Lotus Play';
@@ -24,6 +32,46 @@ function GameDetails() {
       }
     })();
   }, []);
+
+  function getFakeInstallPromise(size) {
+    return new Promise((res, rej) => {
+      setTimeout(() => {
+        res();
+      }, size);
+    });
+  }
+
+  function installGame() {
+    setInstalling(true);
+    toast.promise(
+      getFakeInstallPromise(game.size),
+      {
+        loading: `Installing ${game.title}`,
+        success: () => {
+          const installedGames = JSON.parse(localStorage.getItem('installed-games')) || [];
+          installedGames.push(game);
+          localStorage.setItem('installed-games', JSON.stringify(installedGames));
+
+          setInstalled(game);
+          setInstalling(false);
+          return `${game.title} installed`;
+        },
+        error: () => {
+          setInstalling(false);
+          return 'Installation failed';
+        },
+      },
+      { duration: 2500 },
+    );
+  }
+
+  function uninstallGame() {
+    const installedGames = JSON.parse(localStorage.getItem('installed-games')) || [];
+    const filtered = installedGames.filter((g) => g.id != game.id);
+    localStorage.setItem('installed-games', JSON.stringify(filtered));
+    setInstalled(null);
+    toast.success(`${game.title} uninstalled`, { duration: 2500 });
+  }
 
   if (gameLoading) {
     document.querySelector('title').textContent = `Details • Lotus Play`;
@@ -128,21 +176,53 @@ function GameDetails() {
               </div>
 
               <div className="flex items-center gap-4">
-                <button className="flex items-center gap-2 rounded-md bg-(--accent) px-5 py-1 font-medium tracking-wide text-(--details-banner-bg)">
-                  <span>Install</span>
-                  <span>
-                    <Download size="16" />
-                  </span>
-                </button>
-                <span className="text-sm font-light tracking-wide">
-                  <span>Download size: </span>
-                  <span className="font-normal">
-                    {(() => {
-                      if (game.size > 1024) return `${(game.size / 1024).toFixed(2)}GB`;
-                      else return `${game.size}MB`;
-                    })()}
-                  </span>
-                </span>
+                {installed ? (
+                  <>
+                    <button
+                      onClick={uninstallGame}
+                      className="flex h-[35px] items-center gap-2 rounded-md border border-zinc-700 bg-transparent px-5 font-medium tracking-wide text-(--accent)"
+                    >
+                      <span>Uninstall</span>
+                      <span>
+                        <Trash size="16" />
+                      </span>
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      onClick={installGame}
+                      className="relative flex h-[35px] w-30 items-center justify-center gap-2 overflow-hidden rounded-md border border-(--accent) bg-(--accent) font-medium tracking-wide text-(--details-banner-bg)"
+                    >
+                      {installing ? (
+                        <span className="loading loading-spinner loading-sm"></span>
+                      ) : (
+                        <>
+                          <span>Install</span>
+                          <span>
+                            <Download size="16" />
+                          </span>
+                        </>
+                      )}
+
+                      <span
+                        style={{
+                          transition: `width ${game.size}ms linear`,
+                        }}
+                        className={`absolute bottom-0 left-0 block h-0.5 bg-white ${installing ? 'w-full' : 'w-0'}`}
+                      ></span>
+                    </button>
+                    <span className="text-sm font-light tracking-wide">
+                      <span>Size: </span>
+                      <span className="font-normal">
+                        {(() => {
+                          if (game.size > 1024) return `${(game.size / 1024).toFixed(2)}GB`;
+                          else return `${game.size}MB`;
+                        })()}
+                      </span>
+                    </span>
+                  </>
+                )}
               </div>
             </div>
           </div>

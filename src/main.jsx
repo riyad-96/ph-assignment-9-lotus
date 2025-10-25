@@ -17,6 +17,8 @@ import NotFound from './pages/NotFound.jsx';
 import Profile from './pages/Profile.jsx';
 import ProfileProtected from './routes/ProfileProtected.jsx';
 import ResetPassword from './components/auth/ResetPassword.jsx';
+import ProfileIndex from './components/profile/ProfileIndex.jsx';
+import UpdateProfile from './components/profile/UpdateProfile.jsx';
 
 // Routes
 const router = createBrowserRouter([
@@ -54,6 +56,16 @@ const router = createBrowserRouter([
                 <Profile />
               </ProfileProtected>
             ),
+            children: [
+              {
+                index: true,
+                element: <ProfileIndex />
+              },
+              {
+                path: 'update-profile',
+                element: <UpdateProfile />
+              }
+            ]
           },
         ],
       },

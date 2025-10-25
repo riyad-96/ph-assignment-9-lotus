@@ -6,7 +6,7 @@ function ProfileProtected({ children }) {
   const location = useLocation();
   const navigate = useNavigate();
 
-  if (!user) return <Navigate to="/auth/log-in" />;
+  if (!user) return <Navigate to="/auth/log-in" state={location.pathname} />;
   if (user && location.state) navigate(location.state);
   return children;
 }
