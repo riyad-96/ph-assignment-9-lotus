@@ -6,6 +6,7 @@ import AllGamesSection from '../../components/home/AllGamesSection';
 import { useGlobalContext } from '../../contexts/GlobalContext';
 import SkeletonPopularCard from '../../loading/SkeletonPopularCard';
 import SkeletonAllAppSection from '../../loading/SkeletonAllAppSection';
+import EachPopularGameCard from '../../components/home/EachPopularGameCard';
 
 function HomeIndex() {
   const { dataLoading, allGames, top9Games, categories } = useGlobalContext();
@@ -42,34 +43,9 @@ function HomeIndex() {
               </>
             ) : (
               <>
-                {top9Games.map((g, i) => {
-                  const { id, title, icon, ratings, category } = g;
-                  return (
-                    <div key={`popular${id}`} className="group relative rounded-md px-4 py-3">
-                      <Link className="absolute inset-0 z-3" to={`/details/${id}`} />
-                      <span className="absolute inset-0 z-1 block scale-80 rounded-lg bg-zinc-200 opacity-0 transition-[opacity,scale] duration-250 pointer-fine:group-hover:scale-100 pointer-fine:group-hover:opacity-100"></span>
-
-                      <div className="relative z-2 flex items-center gap-3">
-                        <div>
-                          <span className="text-sm text-zinc-600">{i + 1}</span>
-                        </div>
-                        <div className="size-15 overflow-hidden rounded-lg shadow-md">
-                          <img src={icon.lowRes} alt="" />
-                        </div>
-                        <div className="grid leading-5">
-                          <h3 className="line-clamp-1 font-medium">{title}</h3>
-                          <span className="text-sm text-zinc-600">{category}</span>
-                          <span className="flex items-center gap-1.5 text-sm text-zinc-500">
-                            <span>{ratings}</span>
-                            <span>
-                              <Star size="12" fill="currentColor" />
-                            </span>
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
+                {top9Games.map((g, i) => (
+                  <EachPopularGameCard key={`popular${i}`} g={g} i={i} />
+                ))}
               </>
             )}
           </div>

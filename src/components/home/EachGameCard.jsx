@@ -17,7 +17,7 @@ function EachGameCard({ g }) {
           ></span>
           <img
             onLoad={() => setImgLoading(false)}
-            className={`relative z-2 size-full object-cover transition-[opacity,filter] delay-[0,450ms] duration-[300ms,250ms] ${imgLoading ? 'opacity-0 blur-md' : 'opacity-100 blur-none'}`}
+            className={`relative z-2 size-full object-cover transition-[opacity,filter] delay-[0,450ms] duration-[300ms,500ms] ${imgLoading ? 'opacity-0 blur-xs' : 'opacity-100 blur-none'}`}
             src={icon.highRes}
             alt={title}
             loading="lazy"
