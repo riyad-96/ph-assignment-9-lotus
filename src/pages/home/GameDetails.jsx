@@ -3,9 +3,12 @@ import { toast } from 'kitzo/react';
 import { Download, Star, Trash } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
+import { useGlobalContext } from '../../contexts/GlobalContext';
 
 function GameDetails() {
   const { id } = useParams();
+
+  const { setDownloads } = useGlobalContext();
 
   const [game, setGame] = useState({});
   const [gameLoading, setGameLoading] = useState(true);
@@ -14,6 +17,7 @@ function GameDetails() {
   const [installing, setInstalling] = useState(false);
 
   useEffect(() => {
+    if (!id) return;
     (async () => {
       try {
         const apiRes = await fetch(`https://kitzo-apis.onrender.com/games/${id}`);
@@ -31,7 +35,7 @@ function GameDetails() {
         setGameLoading(false);
       }
     })();
-  }, []);
+  }, [id]);
 
   function getFakeInstallPromise(size) {
     return new Promise((res, rej) => {
@@ -51,8 +55,8 @@ function GameDetails() {
           const installedGames = JSON.parse(localStorage.getItem('installed-games')) || [];
           installedGames.push(game);
           localStorage.setItem('installed-games', JSON.stringify(installedGames));
-
           setInstalled(game);
+          setDownloads((prev) => [...prev, game]);
           setInstalling(false);
           return `${game.title} installed`;
         },
@@ -69,6 +73,7 @@ function GameDetails() {
     const installedGames = JSON.parse(localStorage.getItem('installed-games')) || [];
     const filtered = installedGames.filter((g) => g.id != game.id);
     localStorage.setItem('installed-games', JSON.stringify(filtered));
+    setDownloads((prev) => prev.filter((g) => g.id != game.id));
     setInstalled(null);
     toast.success(`${game.title} uninstalled`, { duration: 2500 });
   }

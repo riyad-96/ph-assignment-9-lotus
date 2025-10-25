@@ -4,13 +4,13 @@ import LotusLogo from './LotusLogo';
 import { useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { auth } from '../configs/firebase';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ArrowDown, LogOut } from 'lucide-react';
-import { AnimatePresence } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
 
 function Header() {
   const navigate = useNavigate();
-  const { user } = useGlobalContext();
+  const { user, downloads, setDownloads } = useGlobalContext();
 
   function sendLogoutRequest() {
     toast.promise(
@@ -32,6 +32,30 @@ function Header() {
 
   const [isValidImg, setIsValidImg] = useState(true);
 
+  const [downloadsShowing, setDownloadsShowing] = useState(false);
+
+  useEffect(() => {
+    function hideDownloadedGameSection(e) {
+      const target = e.target.closest('.downloaded-games-section');
+
+      if (target) return;
+      if (!target) {
+        const container = document.querySelector('.downloaded-games-section');
+        if (container) {
+          setDownloadsShowing(false);
+        }
+      }
+    }
+
+    document.addEventListener('mousedown', hideDownloadedGameSection);
+    document.addEventListener('touchstart', hideDownloadedGameSection);
+
+    return () => {
+      document.removeEventListener('mousedown', hideDownloadedGameSection);
+      document.removeEventListener('touchstart', hideDownloadedGameSection);
+    };
+  }, []);
+
   return (
     <header className="header fixed top-0 left-0 z-20 flex h-[50px] w-full items-center bg-white px-3 backdrop-blur-sm transition-[box-shadow,background-color] duration-[200ms,900ms] md:h-15 md:px-4">
       <div className="mx-auto flex max-w-[1100px] flex-1 items-center justify-between">
@@ -50,23 +74,75 @@ function Header() {
           {user ? (
             <>
               <div className="relative">
-                <button className="relative grid size-[30px] place-items-center rounded-full border-2 border-zinc-400 bg-zinc-100 text-zinc-600 hover:bg-zinc-200 md:size-[35px]">
+                <button
+                  onClick={() => {
+                    setDownloadsShowing(true);
+                  }}
+                  className="relative grid size-[30px] place-items-center rounded-full border-2 border-zinc-400 bg-zinc-100 text-zinc-600 hover:bg-zinc-200 md:size-[35px]"
+                >
                   <ArrowDown strokeWidth="3" className="size-4 md:size-5" />
-                  {(() => {
-                    const installedGames =
-                      JSON.parse(localStorage.getItem('installed-games')) || [];
-                    if (installedGames.length > 0) {
-                      return (
-                        <span className="absolute right-0 bottom-0 z-2 grid size-3.5 translate-1/3 place-items-center rounded-full bg-(--accent) text-[10px] leading-0 text-white shadow">
-                          <span className="leading-0">{installedGames.length}</span>
-                        </span>
-                      );
-                    }
-                  })()}
+
+                  {downloads.length > 0 && (
+                    <span className="absolute right-0 bottom-0 z-2 grid size-3.5 translate-1/3 place-items-center rounded-full bg-(--accent) text-[10px] leading-0 text-white shadow">
+                      <span className="leading-0">{downloads.length}</span>
+                    </span>
+                  )}
                 </button>
 
-                <AnimatePresence></AnimatePresence>
-                <div className="absolute"></div>
+                <AnimatePresence>
+                  {downloadsShowing && (
+                    <motion.div
+                      initial={{
+                        y: -10,
+                        scale: 0.9,
+                        opacity: 0,
+                      }}
+                      animate={{
+                        y: 0,
+                        scale: 1,
+                        opacity: 1,
+                      }}
+                      exit={{
+                        opacity: 0,
+                        y: -10,
+                        scale: 0.9,
+                      }}
+                      className="downloaded-games-section absolute top-[calc(100%+15px)] left-1/2 w-[250px] -translate-x-1/2 rounded-lg bg-white p-2 shadow-md"
+                    >
+                      {downloads.length > 0 ? (
+                        <div>
+                          {downloads.map((g, i) => {
+                            const { title, icon, id } = g;
+
+                            return (
+                              <div key={`download${i}`} className="group relative">
+                                <span className="absolute inset-0 z-1 scale-75 rounded-lg bg-zinc-200 opacity-0 transition-[opacity,scale] duration-200 group-hover:scale-100 group-hover:opacity-100"></span>
+                                <button
+                                  onClick={() => {
+                                    navigate(`/details/${id}`, {});
+                                    setDownloadsShowing(false);
+                                  }}
+                                  className="absolute inset-0 z-3"
+                                ></button>
+
+                                <div className="relative z-2 flex items-center gap-2 p-2">
+                                  <div className="size-8 shrink-0 overflow-hidden rounded-lg bg-zinc-200">
+                                    <img src={icon.lowRes} alt={title} />
+                                  </div>
+                                  <div>
+                                    <h5 className="line-clamp-2 text-xs">{title}</h5>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      ) : (
+                        <span className="block text-center opacity-80">No apps found!</span>
+                      )}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
               <div className="relative">

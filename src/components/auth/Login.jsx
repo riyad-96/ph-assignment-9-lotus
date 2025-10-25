@@ -8,11 +8,14 @@ import { auth, GoogleProvider } from '../../configs/firebase';
 
 import { motion, AnimatePresence } from 'motion/react';
 import { Mail, MailCheck } from 'lucide-react';
+import { useGlobalContext } from '../../contexts/GlobalContext';
 
 function Login() {
   useEffect(() => {
     document.querySelector('title').textContent = 'Login • Lotus Play';
   }, []);
+
+  const { setInteractionDisabled } = useGlobalContext();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -96,11 +99,14 @@ function Login() {
   }
 
   async function loginWithGoogle() {
+    setInteractionDisabled(true);
     try {
       const res = await signInWithPopup(auth, GoogleProvider);
       console.log(res);
     } catch (err) {
       console.error(err);
+    } finally {
+      setInteractionDisabled(false);
     }
   }
 

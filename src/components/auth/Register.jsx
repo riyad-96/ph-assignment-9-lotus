@@ -10,11 +10,14 @@ import {
 } from 'firebase/auth';
 import { auth, GoogleProvider } from '../../configs/firebase';
 import { AnimatePresence, motion } from 'motion/react';
+import { useGlobalContext } from '../../contexts/GlobalContext';
 
 function Register() {
   useEffect(() => {
     document.querySelector('title').textContent = 'Register • Lotus Play';
   }, []);
+
+  const { setInteractionDisabled } = useGlobalContext();
 
   const [name, setName] = useState('');
   const [photoURL, setPhotoURL] = useState('');
@@ -122,11 +125,14 @@ function Register() {
   }
 
   async function signupWithGoogle() {
+    setInteractionDisabled(true);
     try {
       const res = await signInWithPopup(auth, GoogleProvider);
       console.log(res);
     } catch (err) {
       console.error(err);
+    } finally {
+      setInteractionDisabled(false);
     }
   }
 

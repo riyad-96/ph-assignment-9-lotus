@@ -7,6 +7,7 @@ const globalContext = createContext();
 function GlobalContext({ children }) {
   const [user, setUser] = useState(null);
 
+  const [interactionDisabled, setInteractionDisabled] = useState(false);
   const [appLoading, setAppLoading] = useState(true);
   const [dataLoading, setDataLoading] = useState(true);
 
@@ -48,11 +49,20 @@ function GlobalContext({ children }) {
     return unsubscribe;
   }, []);
 
+  const [downloads, setDownloads] = useState([]);
+
+  useEffect(() => {
+    if (!user) return;
+    setDownloads(JSON.parse(localStorage.getItem('installed-games')) || []);
+  }, [user]);
+
   return (
     <globalContext.Provider
       value={{
         user,
         setUser,
+        interactionDisabled,
+        setInteractionDisabled,
         appLoading,
         setAppLoading,
         dataLoading,
@@ -63,6 +73,8 @@ function GlobalContext({ children }) {
         setCategories,
         top9Games,
         setTop9Games,
+        downloads,
+        setDownloads,
       }}
     >
       {children}
