@@ -220,13 +220,6 @@ function GameDetails() {
                           </span>
                         </>
                       )}
-
-                      <span
-                        style={{
-                          transition: `width ${game.size}ms linear`,
-                        }}
-                        className={`absolute bottom-0 left-0 block h-0.5 bg-white ${installing ? 'w-full' : 'w-0'}`}
-                      ></span>
                     </button>
                     <span className="text-sm font-light tracking-wide">
                       <span>Size: </span>
