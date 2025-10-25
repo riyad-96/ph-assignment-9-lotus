@@ -1,5 +1,7 @@
 ## Lotus Play
 
+> This project was solely made for Programming hero assignment. (assignment - 9)
+
 Live link: [LotusPlay](https://ph-assignment-9-lotus.vercel.app/)
 
 ##### Features
