@@ -74,7 +74,7 @@ function ResetPassword() {
       {resetSuccess ? (
         <>
           <div className="grid justify-items-center text-center">
-            <span>
+            <span className="grid mb-4">
               <CheckCheck size="50" />
             </span>
             <p>Password reset successful.</p>
@@ -94,6 +94,7 @@ function ResetPassword() {
         </>
       ) : (
         <>
+          <h2 className="text-center text-2xl font-medium mb-8">Reset password</h2>
           <div className="grid gap-1">
             <label className="w-fit pl-1" htmlFor="new-pass">
               New Password
