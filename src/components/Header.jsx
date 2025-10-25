@@ -78,7 +78,7 @@ function Header() {
                   onClick={() => {
                     setDownloadsShowing(true);
                   }}
-                  className="relative grid size-[30px] place-items-center rounded-full border-2 border-zinc-400 bg-zinc-100 text-zinc-600 hover:bg-zinc-200 md:size-[35px]"
+                  className="relative grid size-[30px] place-items-center rounded-full border-2 border-zinc-400 bg-zinc-100 text-zinc-600 pointer-fine:hover:bg-zinc-200 md:size-[35px]"
                 >
                   <ArrowDown strokeWidth="3" className="size-4 md:size-5" />
 
@@ -116,7 +116,7 @@ function Header() {
 
                             return (
                               <div key={`download${i}`} className="group relative">
-                                <span className="absolute inset-0 z-1 scale-75 rounded-lg bg-zinc-200 opacity-0 transition-[opacity,scale] duration-200 group-hover:scale-100 group-hover:opacity-100"></span>
+                                <span className="absolute inset-0 z-1 scale-75 rounded-lg bg-zinc-200 opacity-0 transition-[opacity,scale] duration-200 pointer-fine:group-pointer-fine:hover:scale-100 pointer-fine:group-pointer-fine:hover:opacity-100"></span>
                                 <button
                                   onClick={() => {
                                     navigate(`/details/${id}`, {});

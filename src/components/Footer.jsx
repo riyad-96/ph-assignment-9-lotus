@@ -11,16 +11,16 @@ function Footer() {
             <div className="basis-[200px]">
               <span className="text-sm font-medium">Lotus Play</span>
               <div className="grid text-sm font-light">
-                <a href="#" className="inline-block w-fit py-0.5 hover:text-emerald-700">
+                <a href="#" className="inline-block w-fit py-0.5 pointer-fine:hover:text-emerald-700">
                   Play Pass
                 </a>
-                <a href="#" className="inline-block w-fit py-0.5 hover:text-emerald-700">
+                <a href="#" className="inline-block w-fit py-0.5 pointer-fine:hover:text-emerald-700">
                   Play Points
                 </a>
-                <a href="#" className="inline-block w-fit py-0.5 hover:text-emerald-700">
+                <a href="#" className="inline-block w-fit py-0.5 pointer-fine:hover:text-emerald-700">
                   Gift cards
                 </a>
-                <a href="#" className="inline-block w-fit py-0.5 hover:text-emerald-700">
+                <a href="#" className="inline-block w-fit py-0.5 pointer-fine:hover:text-emerald-700">
                   Redeem
                 </a>
               </div>
@@ -29,10 +29,10 @@ function Footer() {
             <div className="grow">
               <span className="text-sm font-medium">Kitds & family</span>
               <div className="grid text-sm font-light">
-                <a href="#" className="inline-block w-fit py-0.5 hover:text-emerald-700">
+                <a href="#" className="inline-block w-fit py-0.5 pointer-fine:hover:text-emerald-700">
                   Parent Guide
                 </a>
-                <a href="#" className="inline-block w-fit py-0.5 hover:text-emerald-700">
+                <a href="#" className="inline-block w-fit py-0.5 pointer-fine:hover:text-emerald-700">
                   Family sharing
                 </a>
               </div>
@@ -40,19 +40,19 @@ function Footer() {
           </div>
 
           <div className="flex flex-wrap gap-x-8 gap-y-4 pt-8 text-xs font-light max-sm:justify-center">
-            <a href="#" className="hover:text-emerald-700">
+            <a href="#" className="pointer-fine:hover:text-emerald-700">
               Terms of Service
             </a>
-            <a href="#" className="hover:text-emerald-700">
+            <a href="#" className="pointer-fine:hover:text-emerald-700">
               Privacy
             </a>
-            <a href="#" className="hover:text-emerald-700">
+            <a href="#" className="pointer-fine:hover:text-emerald-700">
               About Lotus Play
             </a>
-            <a href="#" className="hover:text-emerald-700">
+            <a href="#" className="pointer-fine:hover:text-emerald-700">
               Developers
             </a>
-            <a href="#" className="hover:text-emerald-700">
+            <a href="#" className="pointer-fine:hover:text-emerald-700">
               Lotus Store
             </a>
           </div>

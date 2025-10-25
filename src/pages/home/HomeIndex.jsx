@@ -15,7 +15,7 @@ function HomeIndex() {
   }, []);
 
   return (
-    <div className="home px-2 md:px-4">
+    <div className="home scroll-mt-50 px-2 md:px-4">
       <div className="mx-auto max-w-[1100px]">
         <title>Home • Lotus Play</title>
 
@@ -45,12 +45,11 @@ function HomeIndex() {
                 {top9Games.map((g, i) => {
                   const { id, title, icon, ratings, category } = g;
                   return (
-                    <div
-                      key={`popular${id}`}
-                      className="relative rounded-md px-4 py-3 hover:bg-zinc-200/50"
-                    >
-                      <Link className="absolute inset-0 z-2" to={`/details/${id}`} />
-                      <div className="flex items-center gap-3">
+                    <div key={`popular${id}`} className="group relative rounded-md px-4 py-3">
+                      <Link className="absolute inset-0 z-3" to={`/details/${id}`} />
+                      <span className="absolute inset-0 z-1 block scale-80 rounded-lg bg-zinc-200 opacity-0 transition-[opacity,scale] duration-250 pointer-fine:group-hover:scale-100 pointer-fine:group-hover:opacity-100"></span>
+
+                      <div className="relative z-2 flex items-center gap-3">
                         <div>
                           <span className="text-sm text-zinc-600">{i + 1}</span>
                         </div>

@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { useGlobalContext } from './contexts/GlobalContext';
 import { ToastContainer } from 'kitzo/react';

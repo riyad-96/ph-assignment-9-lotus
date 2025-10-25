@@ -1,9 +1,10 @@
 import { format } from 'date-fns';
 import { toast } from 'kitzo/react';
-import { Download, Star, Trash } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { Download, Star, Trash, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { useGlobalContext } from '../../contexts/GlobalContext';
+import { motion, AnimatePresence } from 'motion/react';
 
 function GameDetails() {
   const { id } = useParams();
@@ -77,6 +78,16 @@ function GameDetails() {
     setInstalled(null);
     toast.success(`${game.title} uninstalled`, { duration: 2500 });
   }
+
+  const [previewImg, setPreviewImg] = useState(null);
+
+  useEffect(() => {
+    if (previewImg) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+  }, [previewImg]);
 
   if (gameLoading) {
     document.querySelector('title').textContent = `Details • Lotus Play`;
@@ -243,7 +254,10 @@ function GameDetails() {
             <div className="hide-scrollbar flex w-[clamp(16.75rem,-1.5493rem+97.5962vw,67.5rem)] overflow-x-auto pb-6">
               {game.morePhotos.map((url, i) => (
                 <div key={i} className="relative shrink-0 rounded-md p-2 hover:bg-zinc-200">
-                  <span className="absolute inset-0 z-2 select-none"></span>
+                  <button
+                    onClick={() => setPreviewImg(url)}
+                    className="absolute inset-0 z-2 select-none"
+                  ></button>
                   <div className="rounded-xl bg-zinc-200">
                     <img
                       className="max-h-[200px] rounded-xl object-contain md:max-h-[300px]"
@@ -286,6 +300,46 @@ function GameDetails() {
           </div>
         </div>
       </section>
+
+      <AnimatePresence>
+        {previewImg && (
+          <motion.div
+            initial={{
+              opacity: 0,
+            }}
+            animate={{
+              opacity: 1,
+            }}
+            exit={{
+              opacity: 0,
+            }}
+            onMouseDown={() => setPreviewImg(null)}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+          >
+            <button className="absolute top-4 right-4 grid size-[30px] place-items-center rounded-full bg-white md:size-10">
+              <X size="20" />
+            </button>
+            <motion.div
+              initial={{
+                scale: 0.9,
+                y: 20,
+              }}
+              animate={{
+                scale: 1,
+                y: 0,
+              }}
+              exit={{
+                scale: 0.9,
+                y: 20,
+              }}
+              onMouseDown={(e) => e.stopPropagation()}
+              className="max-h-[70vh] max-w-[900px] flex-1 overflow-y-auto rounded-xl"
+            >
+              <img className="h-full w-full object-contain" src={previewImg} alt="preview image" />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

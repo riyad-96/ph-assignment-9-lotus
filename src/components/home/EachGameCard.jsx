@@ -8,7 +8,7 @@ function EachGameCard({ g }) {
 
   return (
     <div key={`all${id}`} className="group relative h-fit p-3">
-      <span className="absolute inset-0 z-1 block origin-center scale-80 rounded-lg bg-zinc-200/80 opacity-0 transition-[opacity,scale] duration-300 group-hover:scale-100 group-hover:opacity-100"></span>
+      <span className="absolute inset-0 z-1 block origin-center scale-80 rounded-lg bg-zinc-200/80 opacity-0 transition-[opacity,scale] duration-300 pointer-fine:group-hover:scale-100 pointer-fine:group-hover:opacity-100"></span>
       <Link className="absolute inset-0 z-3" to={`/details/${id}`} />
       <div className="relative z-2 space-y-3">
         <div className="relative aspect-square overflow-hidden rounded-2xl shadow-md">
