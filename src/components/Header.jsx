@@ -116,7 +116,7 @@ function Header() {
 
                             return (
                               <div key={`download${i}`} className="group relative">
-                                <span className="pointer-fine:group-pointer-fine:hover:scale-100 pointer-fine:group-pointer-fine:hover:opacity-100 absolute inset-0 z-1 scale-75 rounded-lg bg-zinc-200 opacity-0 transition-[opacity,scale] duration-200"></span>
+                                <span className="pointer-fine:group-hover:scale-100 pointer-fine:group-hover:opacity-100 absolute inset-0 z-1 scale-75 rounded-lg bg-zinc-200 opacity-0 transition-[opacity,scale] duration-200"></span>
                                 <button
                                   onClick={() => {
                                     navigate(`/details/${id}`, {});
