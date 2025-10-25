@@ -78,7 +78,7 @@ function Header() {
                   onClick={() => {
                     setDownloadsShowing(true);
                   }}
-                  className="relative grid size-[30px] place-items-center rounded-full border-2 border-zinc-400 bg-zinc-100 text-zinc-600 pointer-fine:hover:bg-zinc-200 md:size-[35px]"
+                  className="relative grid size-[30px] place-items-center rounded-full border-2 border-zinc-400 bg-zinc-100 text-zinc-600 md:size-[35px] pointer-fine:hover:bg-zinc-200"
                 >
                   <ArrowDown strokeWidth="3" className="size-4 md:size-5" />
 
@@ -116,7 +116,7 @@ function Header() {
 
                             return (
                               <div key={`download${i}`} className="group relative">
-                                <span className="absolute inset-0 z-1 scale-75 rounded-lg bg-zinc-200 opacity-0 transition-[opacity,scale] duration-200 pointer-fine:group-pointer-fine:hover:scale-100 pointer-fine:group-pointer-fine:hover:opacity-100"></span>
+                                <span className="pointer-fine:group-pointer-fine:hover:scale-100 pointer-fine:group-pointer-fine:hover:opacity-100 absolute inset-0 z-1 scale-75 rounded-lg bg-zinc-200 opacity-0 transition-[opacity,scale] duration-200"></span>
                                 <button
                                   onClick={() => {
                                     navigate(`/details/${id}`, {});
@@ -170,7 +170,7 @@ function Header() {
             <>
               <button
                 onClick={() => navigate('/auth/log-in')}
-                className="rounded-md border border-(--accent) px-2 py-0.5 text-sm text-(--accent) md:px-4 md:py-1.5"
+                className="rounded-md border border-(--accent) bg-transparent backdrop-blur-xs px-2 py-0.5 text-sm text-(--accent) md:px-4 md:py-1.5"
               >
                 Login
               </button>
