@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { EyeOff, EyeOpened, GoogleIcon } from '../Svgs';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { toast } from 'kitzo/react';
 
-import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { auth, GoogleProvider } from '../../configs/firebase';
 
 import { motion, AnimatePresence } from 'motion/react';
+import { Mail, MailCheck } from 'lucide-react';
 
 function Login() {
   useEffect(() => {
@@ -101,6 +102,28 @@ function Login() {
     } catch (err) {
       console.error(err);
     }
+  }
+
+  const [forgetPassModalShowing, setForgetPassModalShowing] = useState(false);
+  const [mailSent, setMailSent] = useState(false);
+  const [sendingMail, setSendingMail] = useState(false);
+  const [forgetPassEmail, setForgetPassEmail] = useState('');
+
+  async function sendResetPassEmail() {
+    setSendingMail(true);
+    toast.promise(sendPasswordResetEmail(auth, forgetPassEmail), {
+      loading: 'Sending reset link...',
+      success: () => {
+        setMailSent(true);
+        setSendingMail(false);
+        return 'Reset link sent';
+      },
+      error: (err) => {
+        console.error(err);
+        setSendingMail(false);
+        return 'Reset failed';
+      },
+    });
   }
 
   return (
@@ -210,13 +233,22 @@ function Login() {
       </div>
 
       <div className="mt-4">
-        <button className="mx-auto block text-sm pointer-fine:hover:text-(--accent) pointer-fine:hover:underline">
+        <button
+          onClick={() => {
+            setForgetPassModalShowing(true);
+            setForgetPassEmail(email);
+          }}
+          className="mx-auto block text-sm pointer-fine:hover:text-(--accent) pointer-fine:hover:underline"
+        >
           Forgot password?
         </button>
       </div>
 
       <div className="mt-4">
-        <button onClick={loginWithGoogle} className="flex h-[45px] w-full items-center justify-center gap-2 rounded-full bg-zinc-800 tracking-wide text-white">
+        <button
+          onClick={loginWithGoogle}
+          className="flex h-[45px] w-full items-center justify-center gap-2 rounded-full bg-zinc-800 tracking-wide text-white"
+        >
           <span>
             <GoogleIcon size="20" />
           </span>
@@ -235,6 +267,109 @@ function Login() {
           />
         </span>
       </div>
+
+      <AnimatePresence>
+        {forgetPassModalShowing && (
+          <motion.div
+            onMouseDown={() => setForgetPassModalShowing(false)}
+            initial={{
+              opacity: 0,
+            }}
+            animate={{
+              opacity: 1,
+            }}
+            exit={{
+              opacity: 0,
+            }}
+            className="fixed inset-0 z-10 flex items-center justify-center bg-black/30 p-4"
+          >
+            <motion.div
+              onMouseDown={(e) => e.stopPropagation()}
+              initial={{
+                y: 50,
+              }}
+              animate={{
+                y: 0,
+              }}
+              exit={{
+                y: 50,
+                opacity: 0,
+              }}
+              className="max-w-[450px] flex-1 space-y-4 rounded-xl bg-(--main-bg) p-4 shadow"
+            >
+              {mailSent ? (
+                <>
+                  <div className="flex items-center gap-2">
+                    <MailCheck />
+                    <h3>Mail sent !</h3>
+                  </div>
+
+                  <p className="leading-5">
+                    A password reset email has been sent to <strong>{forgetPassEmail}</strong>. If
+                    you can’t find it, please check your spam or junk folder.
+                  </p>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      onClick={() => {
+                        window.open('https://mail.google.com/', '_blank');
+                      }}
+                      className="grid h-10 w-full place-items-center rounded-full bg-zinc-800 font-light tracking-wide text-white"
+                    >
+                      Go to mail
+                    </button>
+                    <button
+                      onClick={() => {
+                        setForgetPassModalShowing(false);
+                      }}
+                      className="grid h-10 w-full place-items-center rounded-full bg-zinc-800 font-light tracking-wide text-white"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex items-center gap-2">
+                    <Mail />
+                    <h3>Forget Password !</h3>
+                  </div>
+
+                  <div className="grid gap-1">
+                    <label htmlFor="forget-email" className="w-fit pl-1">
+                      Send link to
+                    </label>
+                    <input
+                      value={forgetPassEmail}
+                      onChange={(e) => setForgetPassEmail(e.target.value)}
+                      className="rounded-full border border-zinc-300 bg-white px-5 py-2 outline-none focus:border-zinc-500"
+                      type="email"
+                      id="forget-email"
+                      placeholder="Enter email address"
+                    />
+                  </div>
+
+                  <div>
+                    <button
+                      onClick={() => {
+                        if (sendingMail) return;
+                        sendResetPassEmail();
+                      }}
+                      className="grid h-10 w-full place-items-center rounded-full bg-zinc-800 font-light tracking-wide text-white"
+                    >
+                      {sendingMail ? (
+                        <span className="loading loading-spinner loading-sm"></span>
+                      ) : (
+                        <span>Send</span>
+                      )}
+                    </button>
+                  </div>
+                </>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

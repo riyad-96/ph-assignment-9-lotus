@@ -7,7 +7,7 @@ function Auth() {
   return (
     <div className="grid h-screen items-center overflow-y-auto p-4">
       <div className="mx-auto w-full max-w-[350px] pb-8">
-        <div className="mx-auto w-fit fixed top-3 left-3">
+        <div className="fixed top-3 left-3 mx-auto w-fit">
           <LotusLogo onClick={() => navigate('/')} />
         </div>
         <Outlet />

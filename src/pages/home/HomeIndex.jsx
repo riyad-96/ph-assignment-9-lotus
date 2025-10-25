@@ -15,7 +15,7 @@ function HomeIndex() {
   }, []);
 
   return (
-    <div className="px-2 md:px-4">
+    <div className="home px-2 md:px-4">
       <div className="mx-auto max-w-[1100px]">
         <title>Home • Lotus Play</title>
 

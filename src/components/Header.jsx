@@ -28,9 +28,18 @@ function Header() {
   const [isValidImg, setIsValidImg] = useState(true);
 
   return (
-    <header className="header fixed top-0 left-0 z-5 flex h-[50px] w-full items-center bg-white px-3 backdrop-blur-sm transition-[box-shadow,background-color] duration-[200ms,900ms] md:h-15 md:px-4">
+    <header className="header z-20 fixed top-0 left-0 flex h-[50px] w-full items-center bg-white px-3 backdrop-blur-sm transition-[box-shadow,background-color] duration-[200ms,900ms] md:h-15 md:px-4">
       <div className="mx-auto flex max-w-[1100px] flex-1 items-center justify-between">
-        <LotusLogo onClick={() => navigate('/')} />
+        <LotusLogo
+          onClick={() => {
+            navigate('/');
+            if (document.querySelector('.home')) {
+              document
+                .querySelector('.home')
+                .scrollIntoView({ block: 'start', behavior: 'smooth' });
+            }
+          }}
+        />
 
         <nav className="flex items-center gap-3">
           {user ? (

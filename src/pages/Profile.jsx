@@ -23,6 +23,9 @@ function Profile() {
         success: async () => {
           await reload(user);
           setUpdating(false);
+          setTimeout(() => {
+            window.location.reload();
+          }, 500);
           return 'Update successful';
         },
         error: (err) => {
@@ -88,9 +91,13 @@ function Profile() {
                 if (updating) return;
                 sendUpdateProfileRequest();
               }}
-              className="ml-auto block rounded-full bg-(--accent) px-6 py-2 text-white"
+              className="ml-auto block h-10 w-25 rounded-full bg-(--accent) text-white"
             >
-              Update
+              {updating ? (
+                <span className="loading loading-spinner loading-sm"></span>
+              ) : (
+                <span className="text-sm">Update</span>
+              )}
             </button>
           </div>
         </div>

@@ -16,6 +16,7 @@ import GameDetailsProtected from './routes/GameDetailsProtected.jsx';
 import NotFound from './pages/NotFound.jsx';
 import Profile from './pages/Profile.jsx';
 import ProfileProtected from './routes/ProfileProtected.jsx';
+import ResetPassword from './components/auth/ResetPassword.jsx';
 
 // Routes
 const router = createBrowserRouter([
@@ -72,6 +73,10 @@ const router = createBrowserRouter([
             path: 'register',
             element: <Register />,
           },
+          {
+            path: 'reset-password',
+            element: <ResetPassword />
+          }
         ],
       },
     ],
